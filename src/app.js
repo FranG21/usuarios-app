@@ -1,8 +1,9 @@
 const express = require('express');
 require('pg');
 const routerDepartamento = require('./controlador/departamento');
-const routerCiudad = require('./controlador/ciudad')
-const routerMedicacion = require('./controlador/medicacion')
+const routerCiudad = require('./controlador/ciudad');
+const routerMedicacion = require('./controlador/medicacion');
+const routerUsaurio = require('./controlador/usuario')
 const app = express();
 
 app.use(express.json());

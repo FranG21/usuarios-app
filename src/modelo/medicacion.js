@@ -8,14 +8,18 @@ const medicacion = modelbase.extend({
   hasTimestamps: false,
   initialize() {
     this.on('saving', async(model) => {
-      const medicamento = model.get('medicacion').toUpperCase()
-      const existe = await medicacion.findOne({ medicacion: medicamento })
+
+      const medicamento = model.get('medicamento').toUpperCase();
+      const existe = await medicacion.findOne({ medicamento }, { require: false });
 
       if (existe) {
-
+        throw new Error('Ya existe un medicamento con este nombre');
       }
+      model.set('medicamento', medicamento);
+
     })
   }
+
 })
 
 module.exports = medicacion

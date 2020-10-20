@@ -9,8 +9,8 @@ router.post('/ciudad', async(req, res) => {
     const ciu = await ciudad.save()
     res.status(201).send(ciu)
   } catch (e) {
-    res.status(400).send(e)
+    res.status(400).send(e.message)
   }
 })
 
-module.exports = router
+module.exports = router;
