@@ -10,7 +10,6 @@ const Token = modelbase.extend({
   hasTimestamps: false
 }, {
   findByCredentials: async(correo, clave) => {
-    //console.log(correo)
     const usuario = JSON.parse(JSON.stringify(await Usuario.findOne({ correo }, { require: false })));
     console.log(clave)
     if (!usuario) {
