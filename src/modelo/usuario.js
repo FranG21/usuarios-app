@@ -1,11 +1,12 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-const joi = require('joi');
+//const joi = require('joi');
+const bcrypt = require('bcryptjs');
 const modelbase = require('bookshelf-modelbase')(bookshelf);
 
-const shema = joi.object({
-  correo: joi.string().required().pattern(new RegExp('/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i'))
-})
+// const shema = joi.object({
+//   correo: joi.string().required().pattern(new RegExp('/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i'))
+// })
 
 const usuario = modelbase.extend({
   tableName: 'usuario',
@@ -17,7 +18,12 @@ const usuario = modelbase.extend({
 
       if (existe) {
         throw new Error('Ya existe un usuario con esta direccion de correo');
+      } else if (!validator.isEmail(email)) {
+        throw new Error('Correo invalido');
       }
+
+      model.set("status", true);
+      model.set("clave", await bcrypt.hash(model.get('clave'), 8));
     })
   }
 

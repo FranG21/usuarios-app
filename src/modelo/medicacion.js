@@ -1,7 +1,6 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-const joi = require('joi')
-const modelbase = require('bookshelf-modelbase')(bookshelf)
+const modelbase = require('bookshelf-modelbase')(bookshelf);
 
 const medicacion = modelbase.extend({
   tableName: 'medicacion',
