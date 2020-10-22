@@ -5,7 +5,7 @@ const InfoSalud = modelbase.extend({
   tableName: 'info_salud',
   hasTimestamps: false,
   initialize() {
-    this.on('saving', async(model) => {
+    this.on('creating', async(model) => {
       const medicamento = model.get('medicacion')
       const alergias = model.get('alergias')
 
@@ -14,6 +14,13 @@ const InfoSalud = modelbase.extend({
       }
 
     })
+  }
+}, {
+  validarDatos: async(infoSalud) => {
+
+    if (infoSalud.medicacion === infoSalud.alergias) {
+      throw new Error('La medicacion y las alegias deben de ser diferentes')
+    }
   }
 })
 

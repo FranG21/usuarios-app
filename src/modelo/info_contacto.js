@@ -6,7 +6,7 @@ const InfoUsuario = modelbase.extend({
   tableName: 'info_contacto',
   hasTimestamps: false,
   initialize() {
-    this.on('saving', async(model) => {
+    this.on('creating', async(model) => {
       const telefono = model.get('telefono');
       const existe = await InfoUsuario.findOne({ telefono }, { require: false });
 
@@ -18,6 +18,16 @@ const InfoUsuario = modelbase.extend({
         throw new Error('Ya hay un usuario con este numero');
       }
     })
+  }
+}, {
+  validarCampos: async(infoContacto, id) => {
+    const telefono = infoContacto.telefono;
+    const objInfo = await InfoUsuario.findOne({ telefono }, { require: false });
+
+    if (objInfo && (id !== objInfo.get('id_usuario'))) {
+      throw new Error('Ya hay un usuario con este numero');
+    }
+
   }
 })
 

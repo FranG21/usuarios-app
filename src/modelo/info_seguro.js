@@ -5,7 +5,7 @@ const InfoSeguro = modelbase.extend({
   tableName: 'info_seguro',
   hasTimestamps: false,
   initialize() {
-    this.on('saving', async(model) => {
+    this.on('creating', async(model) => {
       const num_identificador = model.get('num_identificador');
       const existe = await InfoSeguro.findOne({ num_identificador }, { require: false })
 
@@ -13,6 +13,17 @@ const InfoSeguro = modelbase.extend({
         throw new Error('Ya existe un usuario con este numero de identificador')
       }
     })
+  }
+}, {
+  validarDatos: async(infoSeguro, id) => {
+    const num_identificador = infoSeguro.num_identificador
+
+    const objInfo = await InfoSeguro.findOne({ num_identificador }, { require: false })
+
+    if (objInfo && (id !== objInfo.get('id_usuario'))) {
+      throw new Error('Ya existe un usuario con este numero de identificador')
+    }
+    console.log('otro punto')
   }
 })
 

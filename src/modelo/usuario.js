@@ -12,7 +12,7 @@ const usuario = modelbase.extend({
   tableName: 'usuario',
   hasTimestamps: false,
   initialize() {
-    this.on('saving', async(model) => {
+    this.on('creating', async(model) => {
       const email = model.get('correo');
       const existe = await usuario.findOne({ correo: email }, { require: false });
 
@@ -28,6 +28,8 @@ const usuario = modelbase.extend({
   }
 
 })
+
+//usuario.update({ clave: "12345" }, { id: 6 }).then()
 
 // usuario.create({
 //   correo: 'aa',
