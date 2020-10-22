@@ -17,15 +17,10 @@ router.post('/departamento', async(req, res) => {
 router.patch('/departamento/modificar', auth, async(req, res) => {
   try {
     await Departamento.validarCampos(req.body);
-    const id = await InfoContacto.findOne({ id_usuario: req.user.get('id') }, { require: false });
 
-    await InfoContacto.update({
-      telefono: req.body.telefono,
-      direccion: req.body.direccion,
-      id_ciudad: req.body.id_ciudad
-    }, { id: id.get('id') });
+    await Departamento.update({ departamento: req.body.departamento.toUpperCase() }, { id: req.body.id });
 
-    res.send()
+    res.send();
   } catch (e) {
     res.status(400).send(e.message);
   }

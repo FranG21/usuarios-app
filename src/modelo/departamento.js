@@ -3,22 +3,38 @@ const validator = require('validator');
 const joi = require('joi')
 const modelbase = require('bookshelf-modelbase')(bookshelf)
 
-const departamento = modelbase.extend({
+const Departamento = modelbase.extend({
   tableName: 'departamento',
   hasTimestamps: false,
   initialize() {
-    this.on('saving', async(model) => {
+    this.on('creating', async(model) => {
 
       const dep = model.get('departamento').toUpperCase();
-      const existe = await departamento.findOne({ departamento: dep }, { require: false });
+      const existe = await Departamento.findOne({ departamento: dep }, { require: false });
 
-      console.log(existe)
       if (existe) {
         throw new Error('Ya existe un departamento con este nombre');
       }
       model.set('departamento', dep);
 
     })
+  }
+}, {
+  validarCampos: async(departamento) => {
+    //console.log(departamento.id)
+    const existe = await Departamento.findOne({ id: departamento.id }, { require: false });
+
+    if (!existe) {
+      throw new Error('No se encuentra ningun resgristo con este ID');
+    }
+
+    const dep = departamento.departamento.toUpperCase();
+    const objdepartamento = await Departamento.findOne({ departamento: dep }, { require: false });
+
+    if (objdepartamento && (departamento.id !== objdepartamento.get('id'))) {
+      throw new Error('Ya existe un departamento con este nombre');
+    }
+
   }
 })
 
@@ -32,4 +48,4 @@ const departamento = modelbase.extend({
 // buscar('SANTA ANA')
 
 
-module.exports = departamento
+module.exports = Departamento;
