@@ -8,7 +8,7 @@ const modelbase = require('bookshelf-modelbase')(bookshelf);
 //   correo: joi.string().required().pattern(new RegExp('/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i'))
 // })
 
-const usuario = modelbase.extend({
+const Usuario = modelbase.extend({
   tableName: 'usuario',
   hasTimestamps: false,
   initialize() {
@@ -27,6 +27,22 @@ const usuario = modelbase.extend({
     })
   }
 
+}, {
+  validarCampos: async(usuario, id) => {
+
+    const existe = await Usuario.findOne({ correo: usuario.email }, { require: false });
+
+    //console.log(existe.get('id'))
+
+    if (existe && (id !== existe.get('id'))) {
+      //if () {
+      throw new Error('Ya existe un usuario con esta direccion de correo');
+      //}
+    } else if (!validator.isEmail(usuario.email)) {
+      throw new Error('Correo invalido');
+    }
+
+  }
 })
 
 //usuario.update({ clave: "12345" }, { id: 6 }).then()
@@ -47,4 +63,4 @@ const usuario = modelbase.extend({
 //   console.log(`Hay ${count} usaurios`);
 // })
 
-module.exports = usuario;
+module.exports = Usuario;

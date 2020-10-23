@@ -3,10 +3,13 @@ const InfoSeguro = require('../modelo/info_seguro');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
-router.post('/info_seguro', async(req, res) => {
+router.post('/info_seguro', auth, async(req, res) => {
   const infoSeguro = new InfoSeguro(req.body);
 
   try {
+    await InfoSeguro.validarUsuarioUnico(req.user.get('id'));
+
+    infoSeguro.set('id_usuario', req.user.get('id'));
     const info = await infoSeguro.save();
     res.status(201).send(info);
   } catch (e) {

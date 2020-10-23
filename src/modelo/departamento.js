@@ -21,7 +21,7 @@ const Departamento = modelbase.extend({
   }
 }, {
   validarCampos: async(departamento) => {
-    //console.log(departamento.id)
+
     const existe = await Departamento.findOne({ id: departamento.id }, { require: false });
 
     if (!existe) {

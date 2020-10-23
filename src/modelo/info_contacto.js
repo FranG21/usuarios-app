@@ -28,6 +28,14 @@ const InfoUsuario = modelbase.extend({
       throw new Error('Ya hay un usuario con este numero');
     }
 
+  },
+  validarUsuarioUnico: async(id_usuario) => {
+    const existe = await InfoUsuario.findOne({ id_usuario }, { require: false });
+
+    if (existe) {
+      throw new Error('Este usuario ya esta creado');
+    }
+
   }
 })
 

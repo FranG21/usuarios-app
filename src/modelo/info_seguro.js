@@ -24,6 +24,13 @@ const InfoSeguro = modelbase.extend({
       throw new Error('Ya existe un usuario con este numero de identificador')
     }
     console.log('otro punto')
+  },
+  validarUsuarioUnico: async(id) => {
+    const existe = await InfoSeguro.findOne({ id_usuario: id }, { require: false });
+
+    if (existe) {
+      throw new Error('Este usuario ya esta creado');
+    }
   }
 })
 

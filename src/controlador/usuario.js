@@ -4,6 +4,7 @@ const Token = require('../modelo/token');
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 router.post('/usuario', async(req, res) => {
@@ -39,13 +40,32 @@ const upload = multer({
     cb(undefined, true);
   }
 })
-router.patch('/usuario/modi', async(req, res) => {
+
+router.patch('/usuario/modificar', auth, async(req, res) => {
   try {
-    await Usuario.update(req.body, { id: 6 });
+    await Usuario.validarCampos(req.body, req.user.id);
+    const clave = await bcrypt.hash(req.body.clave, 8);
+
+    await Usuario.update({ correo: req.body.email, clave }, { id: req.user.id });
+
+    res.send();
   } catch (error) {
-    res.status(500).send({ error: error.message })
+    res.status(500).send({ error: error.message });
   }
 });
+
+router.get('/usuario/lista', auth, async(req, res) => {
+  try {
+    const lista = await Usuario.collection().query('where', 'status', '=', true).fetchPage({
+        pageSize: 10,
+        page: 2
+      })
+      //collection().fetch();
+    res.send(lista);
+  } catch (e) {
+
+  }
+})
 
 router.post('/usuario/avatar', auth, upload.single('avatar'), async(req, res) => {
   const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();

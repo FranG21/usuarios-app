@@ -4,10 +4,14 @@ const auth = require('../middleware/auth');
 const router = new express.Router();
 
 
-router.post('/info_contacto', async(req, res) => {
+router.post('/info_contacto', auth, async(req, res) => {
   const infoContacto = new InfoContacto(req.body);
   try {
+    await InfoContacto.validarUsuarioUnico(req.user.get('id'));
+
+    infoContacto.set('id_usuario', req.user.get('id'));
     const info = await infoContacto.save();
+
     res.status(201).send(info);
   } catch (e) {
     res.status(400).send(e.message);

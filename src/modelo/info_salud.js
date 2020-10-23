@@ -21,6 +21,13 @@ const InfoSalud = modelbase.extend({
     if (infoSalud.medicacion === infoSalud.alergias) {
       throw new Error('La medicacion y las alegias deben de ser diferentes')
     }
+  },
+  validarUsuarioUnico: async(id) => {
+    const existe = await InfoSalud.findOne({ id_usuario: id }, { require: false });
+
+    if (existe) {
+      throw new Error('Este usuario ya esta creado');
+    }
   }
 })
 
