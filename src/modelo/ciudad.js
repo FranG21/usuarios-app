@@ -1,12 +1,16 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
 const joi = require('joi');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable)
+  //const modelbase = require('bookshelf-modelbase')(bookshelf);
 const Departamento = require('../modelo/departamento');
 
-const Ciudad = modelbase.extend({
+const Ciudad = bookshelf.model('Ciudad', {
   tableName: 'ciudad',
   hasTimestamps: false,
+  departamento() {
+    return this.belongsTo('Departamento', 'id_departamento')
+  },
   initialize() {
     this.on('creating', async(model) => {
 
@@ -47,4 +51,5 @@ const Ciudad = modelbase.extend({
   }
 })
 
+//visible:['campo1','campo2']
 module.exports = Ciudad;

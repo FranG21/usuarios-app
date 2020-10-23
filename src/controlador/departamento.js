@@ -26,8 +26,16 @@ router.patch('/departamento/modificar', auth, async(req, res) => {
   }
 })
 
-router.get('/departamento', async(req, res) => {
-  res.send(req.departamento);
+router.get('/departamento/lista', auth, async(req, res) => {
+  try {
+    const lista = await Departamento.collection().fetchPage({
+      pageSize: 10,
+      page: 1
+    })
+    res.send(lista);
+  } catch (e) {
+
+  }
 })
 
 module.exports = router

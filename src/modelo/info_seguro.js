@@ -1,9 +1,12 @@
 const bookshelf = require('../controlador/conexion');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
 
-const InfoSeguro = modelbase.extend({
+const InfoSeguro = bookshelf.model('InfoSeguro', {
   tableName: 'info_seguro',
   hasTimestamps: false,
+  aseguradora() {
+    return this.belongsTo('Aseguradora');
+  },
   initialize() {
     this.on('creating', async(model) => {
       const num_identificador = model.get('num_identificador');

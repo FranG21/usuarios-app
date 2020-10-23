@@ -1,11 +1,15 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-const joi = require('joi')
+const joi = require('joi');
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
 const modelbase = require('bookshelf-modelbase')(bookshelf)
 
-const Departamento = modelbase.extend({
+const Departamento = bookshelf.model('Departamento', {
   tableName: 'departamento',
   hasTimestamps: false,
+  municipios() {
+    return this.hasMany('Ciudad')
+  },
   initialize() {
     this.on('creating', async(model) => {
 

@@ -25,4 +25,20 @@ router.patch('/aseguradora/modificar', auth, async(req, res) => {
   }
 })
 
+router.get('/aseguradora/lista', auth, async(req, res) => {
+  try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const lista = await Aseguradora.collection().fetchPage({
+      pageSize,
+      page
+    });
+
+    res.send({ lista, pagination: lista.pagination });
+  } catch (e) {
+
+  }
+})
+
 module.exports = router;

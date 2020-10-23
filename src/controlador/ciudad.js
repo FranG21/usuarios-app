@@ -29,4 +29,17 @@ router.patch('/ciudad/modificar', auth, async(req, res) => {
   }
 })
 
+router.get('/ciudad/lista', auth, async(req, res) => {
+  try {
+    const lista = await Ciudad.collection().fetchPage({
+      pageSize: 10,
+      page: 1,
+      withRelated: ['departamento']
+    })
+    res.send(lista);
+  } catch (e) {
+
+  }
+})
+
 module.exports = router;
