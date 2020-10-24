@@ -2,7 +2,6 @@ const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
 const joi = require('joi');
 bookshelf.plugin(require('bookshelf-modelbase').pluggable);
-const modelbase = require('bookshelf-modelbase')(bookshelf)
 
 const Departamento = bookshelf.model('Departamento', {
   tableName: 'departamento',

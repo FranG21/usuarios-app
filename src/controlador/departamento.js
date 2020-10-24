@@ -1,5 +1,6 @@
 const express = require('express');
 const Departamento = require('../modelo/departamento');
+const Ciudad = require('../modelo/ciudad');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
@@ -28,11 +29,33 @@ router.patch('/departamento/modificar', auth, async(req, res) => {
 
 router.get('/departamento/lista', auth, async(req, res) => {
   try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
     const lista = await Departamento.collection().fetchPage({
-      pageSize: 10,
-      page: 1
+      pageSize,
+      page
     })
-    res.send(lista);
+
+    res.send({ lista, pagination: lista.pagination });
+  } catch (e) {
+
+  }
+})
+
+router.get('/departamento/lista/:id', auth, async(req, res) => {
+  try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const listaDepartamento = await Departamento.collection().query('where', 'id', '=', req.params.id).fetch()
+
+    const listaCiudad = await Ciudad.collection().query('where', 'id_departamento', '=', req.params.id).fetchPage({
+      pageSize,
+      page
+    })
+
+    res.send({ listaDepartamento, listaCiudad, pagination: listaCiudad.pagination });
   } catch (e) {
 
   }

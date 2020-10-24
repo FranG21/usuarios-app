@@ -31,15 +31,35 @@ router.patch('/ciudad/modificar', auth, async(req, res) => {
 
 router.get('/ciudad/lista', auth, async(req, res) => {
   try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
     const lista = await Ciudad.collection().fetchPage({
-      pageSize: 10,
-      page: 1,
+      pageSize,
+      page,
       withRelated: ['departamento']
     })
-    res.send(lista);
+    res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
   }
 })
+
+router.get('/ciudad/lista/:id', auth, async(req, res) => {
+  try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const lista = await Ciudad.collection().query('where', 'id', '=', req.params.id).fetchPage({
+      pageSize,
+      page,
+      withRelated: ['departamento']
+    })
+    res.send({ lista, pagination: lista.pagination });
+  } catch (e) {
+
+  }
+})
+
 
 module.exports = router;

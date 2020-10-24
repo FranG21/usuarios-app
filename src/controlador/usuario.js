@@ -56,12 +56,31 @@ router.patch('/usuario/modificar', auth, async(req, res) => {
 
 router.get('/usuario/lista', auth, async(req, res) => {
   try {
+
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
     const lista = await Usuario.collection().query('where', 'status', '=', true).fetchPage({
-        pageSize: 10,
-        page: 2
-      })
-      //collection().fetch();
-    res.send(lista);
+      pageSize,
+      page
+    })
+    res.send({ lista, pagination: lista.pagination });
+  } catch (e) {
+
+  }
+})
+
+router.get('/usuario/lista/:id', auth, async(req, res) => {
+  try {
+
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const lista = await Usuario.where({ id: req.params.id, status: true }).fetchPage({
+      pageSize,
+      page
+    })
+    res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
   }

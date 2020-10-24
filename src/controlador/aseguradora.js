@@ -1,5 +1,6 @@
 const express = require('express');
 const Aseguradora = require('../modelo/aseguradora');
+const InfoSeguro = require('../modelo/info_seguro');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
@@ -36,6 +37,24 @@ router.get('/aseguradora/lista', auth, async(req, res) => {
     });
 
     res.send({ lista, pagination: lista.pagination });
+  } catch (e) {
+
+  }
+})
+
+router.get('/aseguradora/lista/:id', auth, async(req, res) => {
+  try {
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    const listaAseguradora = await Aseguradora.collection().query('where', 'id', '=', req.params.id).fetch();
+
+    const listaInfoSeguro = await InfoSeguro.collection().query('where', 'id_aseguradora', '=', req.params.id).fetchPage({
+      pageSize,
+      page
+    })
+
+    res.send({ listaAseguradora, listaInfoSeguro, pagination: listaInfoSeguro.pagination });
   } catch (e) {
 
   }
