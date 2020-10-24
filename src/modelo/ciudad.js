@@ -2,14 +2,15 @@ const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
 const joi = require('joi');
 bookshelf.plugin(require('bookshelf-modelbase').pluggable)
-  //const modelbase = require('bookshelf-modelbase')(bookshelf);
-const Departamento = require('../modelo/departamento');
 
 const Ciudad = bookshelf.model('Ciudad', {
   tableName: 'ciudad',
   hasTimestamps: false,
   departamento() {
     return this.belongsTo('Departamento', 'id_departamento')
+  },
+  infocontacto() {
+    return this.hasMany('InfoContacto')
   },
   initialize() {
     this.on('creating', async(model) => {

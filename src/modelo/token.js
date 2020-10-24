@@ -3,20 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('./usuario');
 const bookshelf = require('../controlador/conexion');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable)
 
-const Token = modelbase.extend({
+const Token = bookshelf.model('Token', {
   tableName: 'token',
   hasTimestamps: false
 }, {
   findByCredentials: async(correo, clave) => {
     const usuario = JSON.parse(JSON.stringify(await Usuario.findOne({ correo }, { require: false })));
-    console.log(clave)
+
     if (!usuario) {
       throw new Error('No existe ningun usuario con este correo');
     }
-
-    console.log(usuario.clave)
 
     const isMatch = await bcrypt.compare(clave, usuario.clave);
     console.log(usuario)
@@ -27,8 +25,9 @@ const Token = modelbase.extend({
     return usuario
   },
   generarAuthToken: async(usuario) => {
-    const token = jwt.sign({ _id: usuario.id_usuario }, 'mitoken');
-    const tokens = new Token({ token, id_usuario: usuario.id_usuario });
+
+    const token = jwt.sign({ _id: usuario.id }, 'mitoken');
+    const tokens = new Token({ token, id_usuario: usuario.id });
 
     await tokens.save();
     return tokens;

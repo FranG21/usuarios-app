@@ -1,5 +1,8 @@
 const express = require('express');
 const Usuario = require('../modelo/usuario');
+const InfoSalud = require('../modelo/info_salud');
+const InfoContacto = require('../modelo/info_contacto');
+const InfoSeguro = require('../modelo/info_seguro');
 const Token = require('../modelo/token');
 const auth = require('../middleware/auth');
 const multer = require('multer');
@@ -23,6 +26,16 @@ router.post('/usuario/login', async(req, res) => {
     const user = await Token.findByCredentials(req.body.correo, req.body.clave);
     const token = await Token.generarAuthToken(user);
     res.send(token);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+})
+
+router.post('/usuario/logout', auth, async(req, res) => {
+  try {
+    const token = await Token.findOne({ token: req.token }, { require: false })
+    await Token.where({ token: req.token }).destroy();
+    res.send();
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -54,6 +67,19 @@ router.patch('/usuario/modificar', auth, async(req, res) => {
   }
 });
 
+router.patch('/usuario/eliminar', auth, async(req, res) => {
+  try {
+
+    await Usuario.update({ status: false }, { id: req.user.id });
+    await Token.where({ id_usuario: req.user.id }).destroy();
+
+    res.send();
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+
 router.get('/usuario/lista', auth, async(req, res) => {
   try {
 
@@ -83,6 +109,29 @@ router.get('/usuario/lista/:id', auth, async(req, res) => {
     res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
+  }
+})
+
+router.get('/usuario/me', auth, async(req, res) => {
+  try {
+
+    console.log(req.user.get('id'))
+    const usuario = await Usuario.where({ id: req.user.get('id'), status: true }).fetch()
+
+    const infoContacto = await InfoContacto.where({ id_usuario: req.user.get('id') }).fetch({
+      withRelated: ['ciudad']
+    })
+
+    const infoSalud = await InfoSalud.where({ id_usuario: req.user.get('id') }).fetch({
+      withRelated: ['medicacion', 'alergia']
+    });
+    const infoSeguro = await InfoSeguro.where({ id_usuario: req.user.get('id') }).fetch({
+      withRelated: ['aseguradora']
+    });
+
+    res.send({ usuario, infoContacto, infoSalud, infoSeguro });
+  } catch (e) {
+    res.send(e)
   }
 })
 

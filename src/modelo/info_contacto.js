@@ -1,14 +1,21 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
+const Usuario = require('../modelo/usuario');
 
-const InfoUsuario = modelbase.extend({
+const InfoContacto = bookshelf.model('InfoContacto', {
   tableName: 'info_contacto',
   hasTimestamps: false,
+  usuario() {
+    return this.belongsTo('Usuario', 'id_usuario');
+  },
+  ciudad() {
+    return this.belongsTo('Ciudad', 'id_ciudad');
+  },
   initialize() {
     this.on('creating', async(model) => {
       const telefono = model.get('telefono');
-      const existe = await InfoUsuario.findOne({ telefono }, { require: false });
+      const existe = await InfoContacto.findOne({ telefono }, { require: false });
 
       console.log(validator.isMobilePhone(telefono, 'es-ES'))
 
@@ -22,7 +29,7 @@ const InfoUsuario = modelbase.extend({
 }, {
   validarCampos: async(infoContacto, id) => {
     const telefono = infoContacto.telefono;
-    const objInfo = await InfoUsuario.findOne({ telefono }, { require: false });
+    const objInfo = await InfoContacto.findOne({ telefono }, { require: false });
 
     if (objInfo && (id !== objInfo.get('id_usuario'))) {
       throw new Error('Ya hay un usuario con este numero');
@@ -30,7 +37,7 @@ const InfoUsuario = modelbase.extend({
 
   },
   validarUsuarioUnico: async(id_usuario) => {
-    const existe = await InfoUsuario.findOne({ id_usuario }, { require: false });
+    const existe = await InfoContacto.findOne({ id_usuario }, { require: false });
 
     if (existe) {
       throw new Error('Este usuario ya esta creado');
@@ -39,4 +46,4 @@ const InfoUsuario = modelbase.extend({
   }
 })
 
-module.exports = InfoUsuario;
+module.exports = InfoContacto;

@@ -5,7 +5,7 @@ const InfoSeguro = bookshelf.model('InfoSeguro', {
   tableName: 'info_seguro',
   hasTimestamps: false,
   aseguradora() {
-    return this.belongsTo('Aseguradora');
+    return this.belongsTo('Aseguradora', 'id_aseguradora');
   },
   initialize() {
     this.on('creating', async(model) => {

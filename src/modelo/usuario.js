@@ -1,20 +1,23 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-//const joi = require('joi');
+const InfoContacto = require('../modelo/info_contacto');
 const bcrypt = require('bcryptjs');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable)
 
 // const shema = joi.object({
 //   correo: joi.string().required().pattern(new RegExp('/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i'))
 // })
 
-const Usuario = modelbase.extend({
+const Usuario = bookshelf.model('Usuario', {
   tableName: 'usuario',
   hasTimestamps: false,
+  infocontacto() {
+    return this.hasMany('InfoContacto');
+  },
   initialize() {
     this.on('creating', async(model) => {
       const email = model.get('correo');
-      const existe = await usuario.findOne({ correo: email }, { require: false });
+      const existe = await Usuario.findOne({ correo: email, status: true }, { require: false });
 
       if (existe) {
         throw new Error('Ya existe un usuario con esta direccion de correo');
@@ -30,7 +33,7 @@ const Usuario = modelbase.extend({
 }, {
   validarCampos: async(usuario, id) => {
 
-    const existe = await Usuario.findOne({ correo: usuario.email }, { require: false });
+    const existe = await Usuario.findOne({ correo: usuario.email, status: true }, { require: false });
 
     //console.log(existe.get('id'))
 

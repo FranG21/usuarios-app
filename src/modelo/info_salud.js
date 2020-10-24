@@ -1,9 +1,15 @@
 const bookshelf = require('../controlador/conexion');
-const modelbase = require('bookshelf-modelbase')(bookshelf);
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
 
-const InfoSalud = modelbase.extend({
+const InfoSalud = bookshelf.model('InfoSalud', {
   tableName: 'info_salud',
   hasTimestamps: false,
+  medicacion() {
+    return this.belongsTo('Medicacion', 'medicacion');
+  },
+  alergia() {
+    return this.belongsTo('Medicacion', 'alergias');
+  },
   initialize() {
     this.on('creating', async(model) => {
       const medicamento = model.get('medicacion')
