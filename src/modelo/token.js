@@ -26,7 +26,7 @@ const Token = bookshelf.model('Token', {
   },
   generarAuthToken: async(usuario) => {
 
-    const token = jwt.sign({ _id: usuario.id }, 'mitoken');
+    const token = jwt.sign({ _id: usuario.id }, process.env.JWT_SECRET);
     const tokens = new Token({ token, id_usuario: usuario.id });
 
     await tokens.save();
