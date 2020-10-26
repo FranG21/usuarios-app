@@ -1,17 +1,19 @@
 const request = require('supertest');
 const app = require('../app');
 const Usuario = require('../../modelo/usuario');
+//require('../../modelo/departamento');
 
-beforeEach(async() => {
-  await Usuario.where({ status: true }).destroy()
-})
+const { setupDatabase } = require('../fixtures/db')
+
+beforeEach(setupDatabase);
 
 test('Probando insertar usuario', async() => {
 
+  // console.log('AMGIO')
   const user = await request(app).post('/usuario').send({
-    correo: 'franciscomar@gmail.com',
-    clave: 'francisco123456'
-  }).expect(201)
-
-  // console.log(user.body.id)
+      correo: 'franciscomar@gmail.com',
+      clave: 'fran1234'
+    }).expect(201)
+    // console.log('QUEPASOS')
+    // console.log(user.body.id)
 })

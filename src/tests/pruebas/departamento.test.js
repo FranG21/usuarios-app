@@ -1,18 +1,20 @@
 const request = require('supertest');
 const app = require('../app');
 const Departamento = require('../../modelo/departamento');
+//require('../../modelo/usuario');
 
-beforeEach(async() => {
-  await Departamento.where('id', '!=', 0).destroy()
-})
+const { setupDatabase } = require('../fixtures/db');
 
-test('Probando insertar usuario', async() => {
+beforeEach(setupDatabase);
 
+test('Probando insertar departamento', async() => {
+
+  console.log('ojo')
   await request(app).post('/departamento').send({
-    departamento: 'qq'
+    departamento: 'sks'
   }).expect(201)
 
-  // console.log(user.body.id)
+  //console.log(algo.body.departamento)
 })
 
 // test('Mostrar tarea', async() => {

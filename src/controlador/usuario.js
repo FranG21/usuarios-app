@@ -9,6 +9,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
+const request = require('request-promise');
 fb = require('../middleware/oauth');
 
 router.post('/usuario', async(req, res) => {
@@ -40,6 +41,27 @@ router.post('/usuario/logout', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
+})
+
+router.get('/usuario/oauth/facebook', async(req, res) => {
+  const url = 'https://www.facebook.com/v4.0/dialog/oauth?client_id=3402313643181496&redirect_uri=http://localhost:3000/usuario/login/facebook&scope=email&response_type=code&auth_type=rerequest';
+  res.send({ url })
+})
+
+router.get('/usuario/login/facebook', async(req, res) => {
+  const url = 'https://graph.facebook.com/v8.0/oauth/access_token?client_id=' + process.env.CLIENTE_ID + '&redirect_uri=http://localhost:3000/usuario/login/facebook' + '&client_secret=' + process.env.CLIENTE_SECRETO + '&code=' + req.query.code;
+  try {
+    const tokenAccess = await request({ url, json: true });
+    const urlTwo = 'https://graph.facebook.com/me?fields=id,name,email&access_token=' + tokenAccess.access_token;
+    const datosUsuario = await request({ url: urlTwo, json: true })
+
+    const usuarioToken = await Usuario.existeUsuario(datosUsuario.email, datosUsuario.id);
+    const token = await Token.generarAuthToken(usuarioToken);
+    res.send({ datosUsuario, token });
+  } catch (e) {
+
+  }
+
 })
 
 const upload = multer({
@@ -164,12 +186,5 @@ router.get('/users/:id/avatar', async(req, res) => {
   }
 })
 
-router.post('/usuario/loginface', async(req, res) => {
-  try {
-    const fc = fb.getLoginStatus(res)
-    res.send(fc);
-  } catch (e) {
-    res.status(400).send(e.message);
-  }
-})
+
 module.exports = router;

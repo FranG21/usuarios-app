@@ -45,6 +45,19 @@ const Usuario = bookshelf.model('Usuario', {
       throw new Error('Correo invalido');
     }
 
+  },
+  existeUsuario: async(correo, clave) => {
+    const existe = await Usuario.findOne({ correo, status: true }, { require: false })
+
+    if (!existe) {
+      const usuario = new Usuario({
+        correo,
+        clave
+      });
+      return await usuario.save();
+    }
+
+    return existe;
   }
 })
 
