@@ -35,12 +35,9 @@ const Usuario = bookshelf.model('Usuario', {
 
     const existe = await Usuario.findOne({ correo: usuario.email, status: true }, { require: false });
 
-    //console.log(existe.get('id'))
-
     if (existe && (id !== existe.get('id'))) {
-      //if () {
       throw new Error('Ya existe un usuario con esta direccion de correo');
-      //}
+
     } else if (!validator.isEmail(usuario.email)) {
       throw new Error('Correo invalido');
     }

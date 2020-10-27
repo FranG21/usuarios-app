@@ -17,7 +17,7 @@ const Token = bookshelf.model('Token', {
     }
 
     const isMatch = await bcrypt.compare(clave, usuario.clave);
-    console.log(usuario)
+
     if (!isMatch) {
       throw new Error('Verifique su correo y contraseña');
     }

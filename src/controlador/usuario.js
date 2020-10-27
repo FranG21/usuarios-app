@@ -79,6 +79,7 @@ const upload = multer({
 
 router.patch('/usuario/modificar', auth, async(req, res) => {
   try {
+
     await Usuario.validarCampos(req.body, req.user.id);
     const clave = await bcrypt.hash(req.body.clave, 8);
 

@@ -9,12 +9,15 @@ beforeEach(setupDatabase);
 
 test('Probando insertar departamento', async() => {
 
-  console.log('ojo')
-  await request(app).post('/departamento').send({
-    departamento: 'sks'
-  }).expect(201)
 
-  //console.log(algo.body.departamento)
+  await request(app).post('/departamento').send({
+    departamento: 'sonsonate'
+  }).expect(201);
+
+  await request(app).post('/departamento').send({
+    departamento: 'sonsonate'
+  }).expect(400)
+
 })
 
 // test('Mostrar tarea', async() => {
@@ -25,6 +28,3 @@ test('Probando insertar departamento', async() => {
 
 //   //expect(response.body.length).toEqual(2)
 // })
-
-// const dep = await Departamento.findById(18)
-//expect(dep.get('departamento')).toEqual('USULUTAN')
