@@ -4,7 +4,7 @@ const Ciudad = require('../modelo/ciudad');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
-router.post('/departamento', async(req, res) => {
+router.post('/departamento', auth, async(req, res) => {
 
   const departamento = new Departamento(req.body);
   try {
@@ -15,11 +15,11 @@ router.post('/departamento', async(req, res) => {
   }
 })
 
-router.patch('/departamento/modificar', auth, async(req, res) => {
+router.patch('/departamento/modificar/:id', auth, async(req, res) => {
   try {
-    await Departamento.validarCampos(req.body);
+    await Departamento.validarCampos({ id: req.params.id, departamento: req.body.departamento });
 
-    await Departamento.update({ departamento: req.body.departamento.toUpperCase() }, { id: req.body.id });
+    await Departamento.update({ departamento: req.body.departamento.toUpperCase() }, { id: req.params.id });
 
     res.send();
   } catch (e) {
@@ -45,20 +45,15 @@ router.get('/departamento/lista', auth, async(req, res) => {
 
 router.get('/departamento/lista/:id', auth, async(req, res) => {
   try {
-    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
-    const page = req.query.page ? parseInt(req.query.page) : 1;
 
-    const listaDepartamento = await Departamento.collection().query('where', 'id', '=', req.params.id).fetch()
+    const listaDepartamento = await Departamento.collection().query('where', 'id', '=', req.params.id).fetch();
 
-    const listaCiudad = await Ciudad.collection().query('where', 'id_departamento', '=', req.params.id).fetchPage({
-      pageSize,
-      page
-    })
+    const listaCiudad = await Ciudad.collection().query('where', 'id_departamento', '=', req.params.id).fetch();
 
-    res.send({ listaDepartamento, listaCiudad, pagination: listaCiudad.pagination });
+    res.send({ listaDepartamento, listaCiudad });
   } catch (e) {
 
   }
 })
 
-module.exports = router
+module.exports = router;

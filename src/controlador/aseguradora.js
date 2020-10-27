@@ -4,7 +4,7 @@ const InfoSeguro = require('../modelo/info_seguro');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
-router.post('/aseguradora', async(req, res) => {
+router.post('/aseguradora', auth, async(req, res) => {
   const aseguradora = new Aseguradora(req.body);
   try {
     const objAseguradora = await aseguradora.save();
@@ -14,11 +14,11 @@ router.post('/aseguradora', async(req, res) => {
   }
 })
 
-router.patch('/aseguradora/modificar', auth, async(req, res) => {
+router.patch('/aseguradora/modificar/:id', auth, async(req, res) => {
   try {
-    await Aseguradora.validarCampos(req.body);
+    await Aseguradora.validarCampos(req.params.id, req.body);
 
-    await Aseguradora.update({ aseguradora: req.body.aseguradora.toUpperCase() }, { id: req.body.id });
+    await Aseguradora.update({ aseguradora: req.body.aseguradora.toUpperCase() }, { id: req.params.id });
 
     res.send();
   } catch (e) {

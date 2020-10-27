@@ -19,8 +19,8 @@ const Aseguradora = bookshelf.model('Aseguradora', {
     })
   }
 }, {
-  validarCampos: async(aseguradora) => {
-    const existe = await Aseguradora.findOne({ id: aseguradora.id }, { require: false });
+  validarCampos: async(id, aseguradora) => {
+    const existe = await Aseguradora.findOne({ id }, { require: false });
 
     if (!existe) {
       throw new Error('No se encuentra ningun resgristo con este ID');

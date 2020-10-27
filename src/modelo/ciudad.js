@@ -1,7 +1,8 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
 const joi = require('joi');
-bookshelf.plugin(require('bookshelf-modelbase').pluggable)
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
+const Departamento = require('./departamento');
 
 const Ciudad = bookshelf.model('Ciudad', {
   tableName: 'ciudad',
@@ -27,8 +28,8 @@ const Ciudad = bookshelf.model('Ciudad', {
   }
 
 }, {
-  validarCampos: async(ciudad) => {
-    const existe = await Ciudad.findOne({ id: ciudad.id }, { require: false });
+  validarCampos: async(id, ciudad) => {
+    const existe = await Ciudad.findOne({ id: id }, { require: false });
 
     if (!existe) {
       throw new Error('No se encuentra un resgristo con este ID');
@@ -36,14 +37,11 @@ const Ciudad = bookshelf.model('Ciudad', {
 
     const objDepartamento = await Departamento.findOne({ id: ciudad.id_departamento }, { require: false });
 
-    console.log(objDepartamento)
-
     if (!objDepartamento) {
       throw new Error('No existe ningun departamento con este ID');
     }
 
     const city = ciudad.ciudad.toUpperCase();
-    console.log(city)
     const objciudad = await Ciudad.findOne({ ciudad: city }, { require: false });
 
     if (objciudad && (ciudad.id !== objciudad.get('id'))) {

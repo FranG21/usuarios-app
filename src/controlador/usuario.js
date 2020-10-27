@@ -91,7 +91,7 @@ router.patch('/usuario/modificar', auth, async(req, res) => {
   }
 });
 
-router.patch('/usuario/eliminar', auth, async(req, res) => {
+router.delete('/usuario/eliminar', auth, async(req, res) => {
   try {
 
     await Usuario.update({ status: false }, { id: req.user.id });
@@ -139,7 +139,6 @@ router.get('/usuario/lista/:id', auth, async(req, res) => {
 router.get('/usuario/me', auth, async(req, res) => {
   try {
 
-    console.log(req.user.get('id'))
     const usuario = await Usuario.where({ id: req.user.get('id'), status: true }).fetch()
 
     const infoContacto = await InfoContacto.where({ id_usuario: req.user.get('id') }).fetch({

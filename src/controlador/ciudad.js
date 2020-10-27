@@ -3,8 +3,7 @@ const Ciudad = require('../modelo/ciudad')
 const auth = require('../middleware/auth');
 const router = new express.Router()
 
-router.post('/ciudad', async(req, res) => {
-
+router.post('/ciudad', auth, async(req, res) => {
   const ciudad = new Ciudad(req.body)
   try {
     const ciu = await ciudad.save()
@@ -14,14 +13,15 @@ router.post('/ciudad', async(req, res) => {
   }
 })
 
-router.patch('/ciudad/modificar', auth, async(req, res) => {
+router.patch('/ciudad/modificar/:id', auth, async(req, res) => {
   try {
-    await Ciudad.validarCampos(req.body);
+
+    await Ciudad.validarCampos(req.params.id, req.body);
 
     await Ciudad.update({
       ciudad: req.body.ciudad.toUpperCase(),
       id_departamento: req.body.id_departamento
-    }, { id: req.body.id });
+    }, { id: req.params.id });
 
     res.send();
   } catch (e) {
@@ -60,6 +60,5 @@ router.get('/ciudad/lista/:id', auth, async(req, res) => {
 
   }
 })
-
 
 module.exports = router;
