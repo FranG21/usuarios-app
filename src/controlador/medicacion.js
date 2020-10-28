@@ -68,7 +68,7 @@ router.get('/medicacion/lista/:id', auth, async(req, res) => {
     });
 
   } catch (e) {
-    console.log(e)
+
   }
 });
 

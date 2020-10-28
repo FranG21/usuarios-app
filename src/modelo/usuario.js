@@ -12,7 +12,7 @@ const Usuario = bookshelf.model('Usuario', {
   initialize() {
     this.on('creating', async(model) => {
       const email = model.get('correo');
-      const existe = await Usuario.findOne({ correo: email, status: true }, { require: false });
+      const existe = await Usuario.findOne({ correo: email }, { require: false });
 
       if (existe) {
         throw new Error('Ya existe un usuario con esta direccion de correo');
@@ -28,7 +28,7 @@ const Usuario = bookshelf.model('Usuario', {
 }, {
   validarCampos: async(usuario, id) => {
 
-    const existe = await Usuario.findOne({ correo: usuario.email, status: true }, { require: false });
+    const existe = await Usuario.findOne({ correo: usuario.email }, { require: false });
 
     if (existe && (id !== existe.get('id'))) {
       throw new Error('Ya existe un usuario con esta direccion de correo');
@@ -40,7 +40,7 @@ const Usuario = bookshelf.model('Usuario', {
   },
   existeUsuario: async(correo, clave) => {
 
-    const existe = await Usuario.findOne({ correo, status: true }, { require: false });
+    const existe = await Usuario.findOne({ correo }, { require: false });
 
     if (!existe) {
       const usuario = new Usuario({

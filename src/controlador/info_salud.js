@@ -23,7 +23,6 @@ router.patch('/info_salud/modificar', auth, async(req, res) => {
     await InfoSalud.validarDatos(req.body);
     const id = await InfoSalud.findOne({ id_usuario: req.user.get('id') }, { require: false });
 
-    console.log(id)
     await InfoSalud.update({
       condiciones: req.body.condiciones,
       alergias: req.body.alergias,
