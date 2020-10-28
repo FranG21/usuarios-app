@@ -129,18 +129,18 @@ router.get('/usuario/lista/:id', auth, async(req, res) => {
       return res.status(404).send();
     }
 
-    const infoContacto = await InfoContacto.where({ id_usuario: req.user.get('id') }).fetch({
-      withRelated: ['ciudad']
-    })
+    // const infoContacto = await InfoContacto.where({ id_usuario: req.user.get('id') }).fetch({
+    //   withRelated: ['ciudad']
+    // })
 
-    const infoSalud = await InfoSalud.where({ id_usuario: req.user.get('id') }).fetch({
-      withRelated: ['medicacion', 'alergia']
-    });
-    const infoSeguro = await InfoSeguro.where({ id_usuario: req.user.get('id') }).fetch({
-      withRelated: ['aseguradora']
-    });
+    // const infoSalud = await InfoSalud.where({ id_usuario: req.user.get('id') }).fetch({
+    //   withRelated: ['medicacion', 'alergia']
+    // });
+    // const infoSeguro = await InfoSeguro.where({ id_usuario: req.user.get('id') }).fetch({
+    //   withRelated: ['aseguradora']
+    // });
 
-    res.send({ usuario, infoContacto, infoSalud, infoSeguro });
+    res.send({ usuario });
   } catch (e) {
 
   }

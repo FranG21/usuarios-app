@@ -46,7 +46,7 @@ test('Prueba lista usuario', async() => {
     .expect(200);
 });
 
-test('Prueba obtener registro por ID', async() => {
+test('Prueba registro por ID', async() => {
   await request(app)
     .get('/usuario/lista/' + usuarioOne.id)
     .set('Authorization', `Bearer ${usuarioOne.token}`)
