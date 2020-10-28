@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('./usuario');
 const bookshelf = require('../controlador/conexion');
-bookshelf.plugin(require('bookshelf-modelbase').pluggable)
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
 
 const Token = bookshelf.model('Token', {
   tableName: 'token',
@@ -22,12 +22,13 @@ const Token = bookshelf.model('Token', {
       throw new Error('Verifique su correo y contraseña');
     }
 
-    return usuario
+    return usuario;
   },
   generarAuthToken: async(usuario) => {
 
     const token = jwt.sign({ _id: usuario.id }, process.env.JWT_SECRET);
     const tokens = new Token({ token, id_usuario: usuario.id });
+
 
     await tokens.save();
     return tokens;

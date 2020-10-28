@@ -12,20 +12,21 @@ const InfoSalud = bookshelf.model('InfoSalud', {
   },
   initialize() {
     this.on('creating', async(model) => {
-      const medicamento = model.get('medicacion')
-      const alergias = model.get('alergias')
+
+      const medicamento = model.get('medicacion');
+      const alergias = model.get('alergias');
 
       if (medicamento === alergias) {
-        throw new Error('La medicacion y las alegias deben de ser diferentes')
+        throw new Error('La medicacion y las alegias deben de ser diferentes');
       }
 
-    })
+    });
   }
 }, {
   validarDatos: async(infoSalud) => {
 
     if (infoSalud.medicacion === infoSalud.alergias) {
-      throw new Error('La medicacion y las alegias deben de ser diferentes')
+      throw new Error('La medicacion y las alegias deben de ser diferentes');
     }
   },
   validarUsuarioUnico: async(id) => {
@@ -35,6 +36,6 @@ const InfoSalud = bookshelf.model('InfoSalud', {
       throw new Error('Este usuario ya esta creado');
     }
   }
-})
+});
 
 module.exports = InfoSalud;

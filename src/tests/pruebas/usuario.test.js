@@ -46,6 +46,14 @@ test('Prueba lista usuario', async() => {
     .expect(200);
 });
 
+test('Prueba obtener registro por ID', async() => {
+  await request(app)
+    .get('/usuario/lista/' + usuarioOne.id)
+    .set('Authorization', `Bearer ${usuarioOne.token}`)
+    .send()
+    .expect(200);
+});
+
 test('Prueba lista usuario sin autenticacion', async() => {
   await request(app)
     .get('/usuario/lista')
@@ -73,7 +81,7 @@ test('Prueba agregar imagen', async() => {
   expect(user.get('foto')).toEqual(expect.any(Buffer))
 });
 
-test('Probar modificar usuario', async() => {
+test('Prueba modificar usuario', async() => {
 
   await request(app)
     .patch('/usuario/modificar')
@@ -97,7 +105,7 @@ test('Prueba modificacion incorrecta', async() => {
     }).expect(500);
 });
 
-test('Eliminar usuario', async() => {
+test('Prueba eliminar usuario', async() => {
   await request(app)
     .delete('/usuario/eliminar')
     .set('Authorization', `Bearer ${usuarioOne.token}`)

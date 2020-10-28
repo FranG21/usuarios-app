@@ -15,7 +15,7 @@ router.post('/info_seguro', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 router.patch('/info_seguro/modificar', auth, async(req, res) => {
   try {
@@ -32,6 +32,26 @@ router.patch('/info_seguro/modificar', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
+
+router.get('/info_seguro/lista', auth, async(req, res) => {
+  try {
+    const infoSeguro = await InfoSeguro.collection().query('where', '	id_usuario', '=', req.user.get('id')).fetch();
+
+    res.send(infoSeguro);
+  } catch (e) {
+
+  }
+});
+
+router.get('/info_seguro/lista/:id', auth, async(req, res) => {
+  try {
+    const infoSeguro = await InfoSeguro.collection().query('where', 'id', '=', req.params.id).fetch();
+
+    res.send(infoSeguro);
+  } catch (e) {
+
+  }
+});
 
 module.exports = router;

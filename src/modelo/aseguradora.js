@@ -13,9 +13,9 @@ const Aseguradora = bookshelf.model('Aseguradora', {
       const existe = await Aseguradora.findOne({ aseguradora }, { require: false });
 
       if (existe) {
-        throw new Error('Ya existe una aseguradora con este nombre')
+        throw new Error('Ya existe una aseguradora con este nombre');
       }
-      model.set('aseguradora', aseguradora)
+      model.set('aseguradora', aseguradora);
     })
   }
 }, {
@@ -33,6 +33,6 @@ const Aseguradora = bookshelf.model('Aseguradora', {
       throw new Error('Ya existe una aseguradora con este nombre');
     }
   }
-})
+});
 
 module.exports = Aseguradora;

@@ -1,15 +1,16 @@
-const express = require('express')
-const Ciudad = require('../modelo/ciudad')
+const express = require('express');
+const Ciudad = require('../modelo/ciudad');
 const auth = require('../middleware/auth');
-const router = new express.Router()
+const router = new express.Router();
 
 router.post('/ciudad', auth, async(req, res) => {
-  const ciudad = new Ciudad(req.body)
+  const ciudad = new Ciudad(req.body);
   try {
-    const ciu = await ciudad.save()
-    res.status(201).send(ciu)
+    const ciu = await ciudad.save();
+    res.status(201).send(ciu);
+
   } catch (e) {
-    res.status(400).send(e.message)
+    res.status(400).send(e.message);
   }
 })
 
@@ -38,7 +39,8 @@ router.get('/ciudad/lista', auth, async(req, res) => {
       pageSize,
       page,
       withRelated: ['departamento']
-    })
+    });
+
     res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
@@ -54,11 +56,12 @@ router.get('/ciudad/lista/:id', auth, async(req, res) => {
       pageSize,
       page,
       withRelated: ['departamento']
-    })
+    });
+
     res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
   }
-})
+});
 
 module.exports = router;

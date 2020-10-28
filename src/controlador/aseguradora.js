@@ -12,7 +12,7 @@ router.post('/aseguradora', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 router.patch('/aseguradora/modificar/:id', auth, async(req, res) => {
   try {
@@ -24,7 +24,7 @@ router.patch('/aseguradora/modificar/:id', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 router.get('/aseguradora/lista', auth, async(req, res) => {
   try {
@@ -40,24 +40,30 @@ router.get('/aseguradora/lista', auth, async(req, res) => {
   } catch (e) {
 
   }
-})
+});
 
 router.get('/aseguradora/lista/:id', auth, async(req, res) => {
   try {
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
     const page = req.query.page ? parseInt(req.query.page) : 1;
 
-    const listaAseguradora = await Aseguradora.collection().query('where', 'id', '=', req.params.id).fetch();
+    const listaAseguradora = await Aseguradora.collection()
+      .query('where', 'id', '=', req.params.id).fetch({ require: false });
 
-    const listaInfoSeguro = await InfoSeguro.collection().query('where', 'id_aseguradora', '=', req.params.id).fetchPage({
+    if (!listaAseguradora) {
+      return res.status(404).send();
+    }
+
+    const listaInfoSeguro = await InfoSeguro.collection().
+    query('where', 'id_aseguradora', '=', req.params.id).fetchPage({
       pageSize,
       page
-    })
+    });
 
     res.send({ listaAseguradora, listaInfoSeguro, pagination: listaInfoSeguro.pagination });
   } catch (e) {
 
   }
-})
+});
 
 module.exports = router;

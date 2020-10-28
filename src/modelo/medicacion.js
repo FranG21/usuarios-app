@@ -19,11 +19,24 @@ const Medicacion = bookshelf.model('Medicacion', {
       }
       model.set('medicamento', medicamento);
 
-    })
+    });
   }
 
-})
+}, {
+  validarCampos: async(id, medicamento) => {
+    const existe = await Medicacion.findOne({ id }, { require: false });
 
-//medicacion.update({ medicamento: 'Prueba' }, { id: 4 })
+    if (!existe) {
+      throw new Error('No se encuentra ningun resgristo con este ID');
+    }
 
-module.exports = Medicacion
+    const nomMedicamento = medicamento.medicamento.toUpperCase();
+    const objMedicamento = await Medicacion.findOne({ medicamento: nomMedicamento }, { require: false });
+
+    if (objMedicamento && (id !== objMedicamento.get('id'))) {
+      throw new Error('Ya existe un medicamento con este nombre');
+    }
+  }
+});
+
+module.exports = Medicacion;

@@ -8,10 +8,10 @@ const Ciudad = bookshelf.model('Ciudad', {
   tableName: 'ciudad',
   hasTimestamps: false,
   departamento() {
-    return this.belongsTo('Departamento', 'id_departamento')
+    return this.belongsTo('Departamento', 'id_departamento');
   },
   infocontacto() {
-    return this.hasMany('InfoContacto')
+    return this.hasMany('InfoContacto');
   },
   initialize() {
     this.on('creating', async(model) => {
@@ -24,7 +24,7 @@ const Ciudad = bookshelf.model('Ciudad', {
       }
       model.set('ciudad', city);
 
-    })
+    });
   }
 
 }, {
@@ -48,7 +48,6 @@ const Ciudad = bookshelf.model('Ciudad', {
       throw new Error('Ya existe una ciudad con este nombre');
     }
   }
-})
+});
 
-//visible:['campo1','campo2']
 module.exports = Ciudad;

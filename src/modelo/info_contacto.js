@@ -1,7 +1,5 @@
 const bookshelf = require('../controlador/conexion');
-const validator = require('validator');
 bookshelf.plugin(require('bookshelf-modelbase').pluggable);
-const Usuario = require('../modelo/usuario');
 
 const InfoContacto = bookshelf.model('InfoContacto', {
   tableName: 'info_contacto',
@@ -17,21 +15,21 @@ const InfoContacto = bookshelf.model('InfoContacto', {
       const telefono = model.get('telefono');
       const existe = await InfoContacto.findOne({ telefono }, { require: false });
 
-      console.log(validator.isMobilePhone(telefono, 'es-ES'))
-
-      if (false) {
+      if (!telefono.match(/^\d{4}-\d{4}/)) {
         throw new Error('No es un numero de telfono valido');
       } else if (existe) {
         throw new Error('Ya hay un usuario con este numero');
       }
-    })
+    });
   }
 }, {
   validarCampos: async(infoContacto, id) => {
     const telefono = infoContacto.telefono;
     const objInfo = await InfoContacto.findOne({ telefono }, { require: false });
 
-    if (objInfo && (id !== objInfo.get('id_usuario'))) {
+    if (!telefono.match(/^\d{4}-\d{4}/)) {
+      throw new Error('No es un numero de telfono valido');
+    } else if (objInfo && (id !== objInfo.get('id_usuario'))) {
       throw new Error('Ya hay un usuario con este numero');
     }
 
@@ -44,6 +42,6 @@ const InfoContacto = bookshelf.model('InfoContacto', {
     }
 
   }
-})
+});
 
 module.exports = InfoContacto;

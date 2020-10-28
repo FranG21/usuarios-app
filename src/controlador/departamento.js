@@ -13,7 +13,7 @@ router.post('/departamento', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 router.patch('/departamento/modificar/:id', auth, async(req, res) => {
   try {
@@ -25,7 +25,7 @@ router.patch('/departamento/modificar/:id', auth, async(req, res) => {
   } catch (e) {
     res.status(400).send(e.message);
   }
-})
+});
 
 router.get('/departamento/lista', auth, async(req, res) => {
   try {
@@ -35,25 +35,23 @@ router.get('/departamento/lista', auth, async(req, res) => {
     const lista = await Departamento.collection().fetchPage({
       pageSize,
       page
-    })
+    });
 
     res.send({ lista, pagination: lista.pagination });
   } catch (e) {
 
   }
-})
+});
 
 router.get('/departamento/lista/:id', auth, async(req, res) => {
   try {
-
     const listaDepartamento = await Departamento.collection().query('where', 'id', '=', req.params.id).fetch();
-
     const listaCiudad = await Ciudad.collection().query('where', 'id_departamento', '=', req.params.id).fetch();
 
     res.send({ listaDepartamento, listaCiudad });
   } catch (e) {
 
   }
-})
+});
 
 module.exports = router;

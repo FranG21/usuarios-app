@@ -7,7 +7,7 @@ const Departamento = bookshelf.model('Departamento', {
   tableName: 'departamento',
   hasTimestamps: false,
   municipios() {
-    return this.hasMany('Ciudad')
+    return this.hasMany('Ciudad');
   },
   initialize() {
     this.on('creating', async(model) => {
@@ -39,16 +39,6 @@ const Departamento = bookshelf.model('Departamento', {
     }
 
   }
-})
-
-// const buscar = async(dep) => {
-//   const buscar = await departamento.findOne({ departamento: dep })
-//   const algo = JSON.parse(JSON.stringify(buscar))
-//   console.log(algo.departamento)
-//   return buscar
-// }
-
-// buscar('SANTA ANA')
-
+});
 
 module.exports = Departamento;

@@ -10,23 +10,23 @@ const InfoSeguro = bookshelf.model('InfoSeguro', {
   initialize() {
     this.on('creating', async(model) => {
       const num_identificador = model.get('num_identificador');
-      const existe = await InfoSeguro.findOne({ num_identificador }, { require: false })
+      const existe = await InfoSeguro.findOne({ num_identificador }, { require: false });
 
       if (existe) {
-        throw new Error('Ya existe un usuario con este numero de identificador')
+        throw new Error('Ya existe un usuario con este numero de identificador');
       }
-    })
+    });
   }
 }, {
   validarDatos: async(infoSeguro, id) => {
-    const num_identificador = infoSeguro.num_identificador
+    const num_identificador = infoSeguro.num_identificador;
 
-    const objInfo = await InfoSeguro.findOne({ num_identificador }, { require: false })
+    const objInfo = await InfoSeguro.findOne({ num_identificador }, { require: false });
 
     if (objInfo && (id !== objInfo.get('id_usuario'))) {
-      throw new Error('Ya existe un usuario con este numero de identificador')
+      throw new Error('Ya existe un usuario con este numero de identificador');
     }
-    console.log('otro punto')
+
   },
   validarUsuarioUnico: async(id) => {
     const existe = await InfoSeguro.findOne({ id_usuario: id }, { require: false });
@@ -35,6 +35,6 @@ const InfoSeguro = bookshelf.model('InfoSeguro', {
       throw new Error('Este usuario ya esta creado');
     }
   }
-})
+});
 
 module.exports = InfoSeguro;

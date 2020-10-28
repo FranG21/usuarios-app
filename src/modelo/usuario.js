@@ -1,12 +1,7 @@
 const bookshelf = require('../controlador/conexion');
 const validator = require('validator');
-const InfoContacto = require('../modelo/info_contacto');
 const bcrypt = require('bcryptjs');
-bookshelf.plugin(require('bookshelf-modelbase').pluggable)
-
-// const shema = joi.object({
-//   correo: joi.string().required().pattern(new RegExp('/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i'))
-// })
+bookshelf.plugin(require('bookshelf-modelbase').pluggable);
 
 const Usuario = bookshelf.model('Usuario', {
   tableName: 'usuario',
@@ -27,7 +22,7 @@ const Usuario = bookshelf.model('Usuario', {
 
       model.set("status", true);
       model.set("clave", await bcrypt.hash(model.get('clave'), 8));
-    })
+    });
   }
 
 }, {
@@ -44,7 +39,8 @@ const Usuario = bookshelf.model('Usuario', {
 
   },
   existeUsuario: async(correo, clave) => {
-    const existe = await Usuario.findOne({ correo, status: true }, { require: false })
+
+    const existe = await Usuario.findOne({ correo, status: true }, { require: false });
 
     if (!existe) {
       const usuario = new Usuario({
@@ -56,24 +52,6 @@ const Usuario = bookshelf.model('Usuario', {
 
     return existe;
   }
-})
-
-//usuario.update({ clave: "12345" }, { id: 6 }).then()
-
-// usuario.create({
-//   correo: 'aa',
-//   clave: 'algo',
-//   status: false
-// }).then(() => {
-//   return usuario.findOne({ correo: 'aa' });
-// })
-
-// // then(function () {
-// //   return User.findOne({ firstName: 'Grayson' }, { require: true });
-// // })
-
-// usuario.count().then((count) => {
-//   console.log(`Hay ${count} usaurios`);
-// })
+});
 
 module.exports = Usuario;
